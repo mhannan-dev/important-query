@@ -30,3 +30,11 @@ if ($request['data_from'] == 'search') {
             }
             $query = $porduct_data->WhereIn('id', $product_ids);
         }
+
+
+MUltiple condidion filter
+$reviews = Review::with(['product', 'customer'])->where(function($q) use($request){
+                $q->orWhere('customer_id',$request->customer_id)
+                ->orWhere('product_id',$request->product_id)
+                ->orWhere('product_id',$request->status);
+              });
