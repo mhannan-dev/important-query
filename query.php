@@ -38,3 +38,5 @@ $reviews = Review::with(['product', 'customer'])->where(function($q) use($reques
                 ->orWhere('product_id',$request->product_id)
                 ->orWhere('product_id',$request->status);
               });
+
+{{ (request()->get("customer_id") != null && request()->get("customer_id") == $item->id )  ? "selected" : "" }}
