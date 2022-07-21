@@ -41,5 +41,6 @@ $reviews = Review::with(['product', 'customer'])->where(function($q) use($reques
 
 {{ (request()->get("customer_id") != null && request()->get("customer_id") == $item->id )  ? "selected" : "" }}
 
+https://stackoverflow.com/questions/63936934/laravel-6-search-query-with-multiple-conditions
 
 https://stackoverflow.com/questions/62599531/laravel-multiple-filter-with-search
