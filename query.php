@@ -44,3 +44,17 @@ $reviews = Review::with(['product', 'customer'])->where(function($q) use($reques
 https://stackoverflow.com/questions/63936934/laravel-6-search-query-with-multiple-conditions
 
 https://stackoverflow.com/questions/62599531/laravel-multiple-filter-with-search
+
+
+$reviews = Review::when(request()->has('product_id'), function($q){
+                $q->where('product_id', request('product_id'));
+            })->when(request()->has('customer_id'), function($q){
+                $q->where('customer_id', request('customer_id'));
+            })->when(request()->has('status'), function($q){
+                $q->where('status', request('status'));
+            })
+            ->where(function($q) use($request){
+                if(isset($request->from) && isset($request->to)){
+                    $q->whereBetween('created_at', [$request->from . ' 00:00:00', $request->to . ' 23:59:59']);
+                }
+            });
