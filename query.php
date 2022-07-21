@@ -46,15 +46,44 @@ https://stackoverflow.com/questions/63936934/laravel-6-search-query-with-multipl
 https://stackoverflow.com/questions/62599531/laravel-multiple-filter-with-search
 
 
-$reviews = Review::when(request()->has('product_id'), function($q){
-                $q->where('product_id', request('product_id'));
-            })->when(request()->has('customer_id'), function($q){
-                $q->where('customer_id', request('customer_id'));
-            })->when(request()->has('status'), function($q){
-                $q->where('status', request('status'));
-            })
-            ->where(function($q) use($request){
-                if(isset($request->from) && isset($request->to)){
-                    $q->whereBetween('created_at', [$request->from . ' 00:00:00', $request->to . ' 23:59:59']);
+function list(Request $request)
+    {
+        //dd($request->all());
+        $query_param = [];
+        $search = $request['search'];
+        if ($request->has('search')) {
+            $key = explode(' ', $request['search']);
+            $product_id = Product::where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->where('name', 'like', "%{$value}%");
                 }
+            })->pluck('id')->toArray();
+            $customer_id = User::where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhere('f_name', 'like', "%{$value}%")
+                        ->orWhere('l_name', 'like', "%{$value}%");
+                }
+            })->pluck('id')->toArray();
+            $reviews = Review::WhereIn('product_id',  $product_id)->orWhereIn('customer_id', $customer_id);
+            $query_param = ['search' => $request['search']];
+        } elseif ($request->customer_id || $request->product_id || $request->status || $request->from || $request->to) {
+
+            $reviews = Review::when($request->product_id != null, function($q) {
+                $q->where('product_id', request('product_id'));
+            })->when($request->customer_id != null, function($q){
+                $q->where('customer_id', request('customer_id'));
+            })->when($request->status != null, function($q){
+                $q->where('status', request('status'));
+            })->when($request->from && $request->to, function($q) use ($request){
+                $q->whereBetween('created_at', [$request->from . ' 00:00:00', $request->to . ' 23:59:59']);
+                //dd($q);
             });
+
+        } else {
+            $reviews = Review::with(['product', 'customer']);
+        }
+        $reviews = $reviews->latest()->paginate(Helpers::pagination_limit());
+        $products = Product::select('id', 'name')->get();
+        $customers = User::select('id', 'name', 'f_name', 'l_name')->get();
+        return view('admin-views.reviews.list', compact('reviews', 'search', 'products', 'customers'));
+    }
