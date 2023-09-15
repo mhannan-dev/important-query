@@ -1,1 +1,969 @@
 
+@extends('backend.layouts.app')
+@section('title', @$data['title'])
+@section('style')
+    <style>
+        .addedTextAreaRemove,
+        #addRowButton {
+            margin-top: 30px;
+        }
+    </style>
+@endsection
+@section('content')
+    {!! breadcrumb([
+        'title' => @$data['title'],
+        route('admin.dashboard') => _trans('common.Dashboard'),
+        '#' => @$data['title'],
+    ]) !!}
+
+    <div class="card ot-card">
+        <div class="card-body">
+            <form method="POST" action="{{ route('user.store') }}">
+                @csrf
+                <div class="row">
+                    <h5>{{ _trans('common.Personal Information') }}</h5>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ _trans('common.First name') }} <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control ot-form-control ot_input"
+                                placeholder="{{ _trans('common.First name') }}" value="{{ old('name') }}">
+                            @if ($errors->has('name'))
+                                <span class="error text-danger">
+                                    {{ $errors->first('name') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ _trans('common.Last name') }}</label>
+                            <input type="text" name="last_name" class="form-control ot-form-control ot_input"
+                                placeholder="{{ _trans('common.Last name') }}" value="{{ old('last_name') }}">
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ _trans('common.Personal ID') }} <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" name="personal_id" class="form-control ot-form-control ot_input"
+                                placeholder="{{ _trans('common.ddmmyynnnn') }}" value="{{ old('personal_id') }}">
+
+
+                            @if ($errors->has('personal_id'))
+                                <span class="error text-danger">
+                                    {{ $errors->first('personal_id') }}
+                                </span>
+                            @endif
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ _trans('common.Email') }} <span
+                                    class="text-danger">*</span></label>
+                            <input type="email" name="email" placeholder="{{ _trans('common.Email') }}"
+                                autocomplete="off" class="form-control ot-form-control ot_input"
+                                value="{{ old('email') }}">
+                            @if ($errors->has('email'))
+                                <span class="error text-danger">
+                                    {{ $errors->first('email') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ _trans('common.Phone') }} <span
+                                    class="text-danger">*</span></label>
+                            <input type="number" name="phone" placeholder="{{ _trans('common.Phone') }}"
+                                autocomplete="off" class="form-control ot-form-control ot_input"
+                                value="{{ old('phone') }}">
+                            @if ($errors->has('phone'))
+                                <div class="error text-danger">{{ $errors->first('phone') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label"> {{ _trans('common.Country') }} <span class="text-danger">*</span>
+                            </label>
+                            <select name="country" class="form-control ot-form-control ot_input select2 w-100"
+                                id="_country_id">
+                            </select>
+                            @if ($errors->has('country'))
+                                <div class="error text-danger">{{ $errors->first('country') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label"> {{ _trans('common.City') }}</label>
+                            <input type="text" name="city" class="form-control ot-form-control ot_input"
+                                placeholder="{{ _trans('common.City') }}">
+                            @if ($errors->has('city'))
+                                <div class="error text-danger">{{ $errors->first('city') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ _trans('common.Joining Date') }} <span
+                                    class="text-danger">*</span></label>
+                            <input type="date" name="joining_date" autocomplete="off"
+                                class="form-control ot-form-control ot_input" value="{{ old('joining_date') }}">
+                            @if ($errors->has('joining_date'))
+                                <div class="error text-danger">{{ $errors->first('joining_date') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ _trans('common.Date Of Birth') }}</label>
+                            <input type="date" name="birth_date" autocomplete="off"
+                                class="form-control ot-form-control ot_input" value="{{ old('birth_date') }}">
+                            @if ($errors->has('birth_date'))
+                                <div class="error text-danger">{{ $errors->first('birth_date') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ _trans('common.Blood Group') }}</label>
+                            <select name="blood_group" class="form-select select2">
+                                <option disabled selected>{{ _trans('common.Choose One') }}
+                                </option>
+                                <option value="A+" {{ old('blood_group') == 'A+' ? 'selected' : '' }}>
+                                    {{ _trans('common.A+') }}
+                                </option>
+                                <option value="A-" {{ old('blood_group') == 'A-' ? 'selected' : '' }}>
+                                    {{ _trans('common.A-') }}
+                                </option>
+                                <option value="B+" {{ old('blood_group') == 'B+' ? 'selected' : '' }}>
+                                    {{ _trans('common.B+') }}
+                                </option>
+                                <option value="B-" {{ old('blood_group') == 'B-' ? 'selected' : '' }}>
+                                    {{ _trans('common.B-') }}
+                                </option>
+                                <option value="O+" {{ old('blood_group') == 'O+' ? 'selected' : '' }}>
+                                    {{ _trans('common.O+') }}
+                                </option>
+                                <option value="O-" {{ old('blood_group') == 'O-' ? 'selected' : '' }}>
+                                    {{ _trans('common.O-') }}
+                                </option>
+                                <option value="AB+" {{ old('blood_group') == 'AB+' ? 'selected' : '' }}>
+                                    {{ _trans('common.AB+') }}
+                                </option>
+                                <option value="AB-" {{ old('blood_group') == 'AB-' ? 'selected' : '' }}>
+                                    {{ _trans('common.AB-') }}
+                                </option>
+                            </select>
+                            @if ($errors->has('blood_group'))
+                                <div class="error text-danger">{{ $errors->first('blood_group') }}</div>
+                            @endif
+                        </div>
+                    </div>
+
+                    @if (settings('user_pass_auto_generate') != 1)
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label">{{ _trans('common.Password') }} <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="password" placeholder="{{ _trans('common.Password') }}"
+                                    autocomplete="off" class="form-control ot-form-control ot_input"
+                                    value="{{ old('password') }}">
+                                @if ($errors->has('password'))
+                                    <div class="error text-danger">{{ $errors->first('password') }}</div>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ _trans('common.Role') }}
+                                <span class="text-danger">*</span></label>
+                            <select name="role_id" class="form-select change-role select2">
+                                <option value="" disabled>
+                                    {{ _trans('common.Choose One') }}
+                                </option>
+                                @foreach ($data['roles'] as $role)
+                                    <option value="{{ $role->id }}">{{ $role->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('role_id'))
+                                <span class="error text-danger">
+                                    {{ $errors->first('role_id') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ _trans('common.Designation') }} <span
+                                    class="text-danger">*</span></label>
+                            <select name="designation_id" class="form-select select2">
+                                <option value="" disabled>{{ _trans('common.Choose One') }}
+                                </option>
+                                @foreach ($data['designations'] as $designation)
+                                    <option value="{{ $designation->id }}">{{ $designation->title }}</option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('designation_id'))
+                                <span class="error text-danger">
+                                    {{ $errors->first('designation_id') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ _trans('common.Department') }} <span
+                                    class="text-danger">*</span></label>
+
+                            <select name="department_id" class="form-select select2">
+
+                                @foreach ($data['departments'] as $department)
+                                    <option value="{{ $department->id }}">{{ $department->title }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('department_id'))
+                                <span class="error text-danger">
+                                    {{ $errors->first('department_id') }}
+                                </span>
+                            @endif
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ _trans('common.Shift') }} <span
+                                    class="text-danger">*</span></label>
+                            <select name="shift_id" class="form-select select2">
+                                <option value="" disabled>{{ _trans('common.Choose One') }}
+                                </option>
+                                @foreach ($data['shifts'] as $shift)
+                                    <option value="{{ $shift->id }}">{{ $shift->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ _trans('common.Gender') }} <span
+                                    class="text-danger">*</span></label>
+                            <select name="gender"
+                                class="form-select demo-select2-placeholder {{ $errors->has('gender') ? 'is-invalid' : '' }} select2">
+                                <option disabled>{{ _trans('common.Choose One') }}</option>
+                                <option value="0" {{ old('gender') == 0 ? 'selected' : '' }}>
+                                    {{ _trans('common.Male') }}
+                                </option>
+                                <option value="1" {{ old('gender') == 1 ? 'selected' : '' }}>
+                                    {{ _trans('common.Female') }}
+                                </option>
+                                <option value="2" {{ old('gender') == 2 ? 'selected' : '' }}>
+                                    {{ _trans('common.Unisex') }}
+                                </option>
+                            </select>
+                            @if ($errors->has('gender'))
+                                <span class="error text-danger">
+                                    {{ $errors->first('gender') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ _trans('common.Address') }} <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" name="address" placeholder={{ _trans('common.Address') }}
+                                autocomplete="off" class="form-control ot-form-control ot_input"
+                                value="{{ old('address') }}">
+                            @if ($errors->has('address'))
+                                <div class="error text-danger">{{ $errors->first('address') }}</div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ _trans('common.Post code') }} <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" name="post_code" placeholder={{ _trans('common.Post code') }}
+                                autocomplete="off" class="form-control ot-form-control ot_input"
+                                value="{{ old('post_code') }}">
+
+
+                            @if ($errors->has('post_code'))
+                                <div class="error text-danger">{{ $errors->first('post_code') }}</div>
+                            @endif
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ _trans('common.Religion') }}</label>
+
+                            <select name="religion" id="religion" class="form-select select2">
+                                <option disabled selected>{{ _trans('common.Choose One') }}
+                                </option>
+                                <option value="Islam" {{ old('religion') == 'Islam' ? 'selected' : '' }}>
+                                    {{ _trans('common.Islam') }}
+                                </option>
+                                <option value="Hindu" {{ old('religion') == 'Hindu' ? 'selected' : '' }}>
+                                    {{ _trans('common.Hindu') }}
+                                </option>
+                                <option value="Christan" {{ old('religion') == 'Christan' ? 'selected' : '' }}>
+                                    {{ _trans('common.Christan') }}
+                                </option>
+                            </select>
+                            @if ($errors->has('religion'))
+                                <div class="error text-danger">{{ $errors->first('religion') }}</div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label" for="marital_status">{{ _trans('common.Marital Status') }}</label>
+                            <select name="marital_status" id="marital_status" class="form-select select2">
+                                <option disabled selected>{{ _trans('common.Choose One') }}
+                                </option>
+                                <option value="Married" {{ old('marital_status') == 'Married' ? 'selected' : '' }}>
+                                    {{ _trans('common.Married') }}
+                                </option>
+                                <option value="Unmarried" {{ old('marital_status') == 'Unmarried' ? 'selected' : '' }}>
+                                    {{ _trans('common.Unmarried') }}
+                                </option>
+                            </select>
+                            @if ($errors->has('marital_status'))
+                                <div class="error text-danger">{{ $errors->first('marital_status') }}</div>
+                            @endif
+                        </div>
+                    </div>
+
+                    @if (settings('user_pass_auto_generate') == 1)
+                        <div class="row">
+                            <div class="col-md-4-lg-12">
+                                <div class="alert alert-info" role="alert">
+                                    {{ _trans('message.On employee creation system will generate 8 digit password and send it to employee email') }}
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+
+                </div>
+                <div class="row">
+                    <h5>{{ _trans('common.Bank Information') }}</h5>
+                    <hr>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="type_of_contract" class="form-label">{{ _trans('common.Bank name') }} <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" name="bank_name" value="{{ old('bank_name') }}"
+                                class="form-control ot-form-control ot_input"
+                                placeholder="{{ _trans('common.Bank name') }}">
+
+
+                            @if ($errors->has('bank_name'))
+                                <span class="error text-danger">
+                                    {{ $errors->first('bank_name') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="type_of_contract" class="form-label">{{ _trans('common.Account name') }} <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" name="bank_account_name" value="{{ old('bank_account_name') }}"
+                                class="form-control ot-form-control ot_input"
+                                placeholder="{{ _trans('common.Bank account name') }}">
+
+
+                            @if ($errors->has('bank_account_name'))
+                                <span class="error text-danger">
+                                    {{ $errors->first('bank_account_name') }}
+                                </span>
+                            @endif
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="type_of_contract" class="form-label">{{ _trans('common.Account number') }} <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" name="bank_account_number" value="{{ old('bank_account_number') }}"
+                                class="form-control ot-form-control ot_input"
+                                placeholder="{{ _trans('common.Bank account number') }}">
+
+
+                            @if ($errors->has('bank_account_number'))
+                                <span class="error text-danger">
+                                    {{ $errors->first('bank_account_number') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <h5>{{ _trans('common.Payroll Information') }}</h5>
+                    <hr>
+                    <div class="col-md-6">
+                        <h6>{{ _trans('common.Employment details') }}</h6>
+                        <div class="mb-3">
+                            <label for="type_of_contract" class="form-label">{{ _trans('common.Type of contract') }}
+                                <span class="text-danger">*</span></label>
+                            <select class="form-control ot-form-control ot_input select2 w-100" name="type_of_contract"
+                                id="__type_of_contract">
+                                <option>{{ _trans('common.Select') }}</option>
+                            </select>
+                            @if ($errors->has('type_of_contract'))
+                                <span class="error text-danger">
+                                    {{ $errors->first('type_of_contract') }}
+                                </span>
+                            @endif
+
+                        </div>
+                        <div class="mb-3">
+                            <label for="type_of_employment"
+                                class="form-label">{{ _trans('common.Type of employment') }}<span
+                                    class="text-danger">*</span></label>
+                            <select class="form-select" name="type_of_employment">
+                                <option selected value="">{{ _trans('common.Select') }}</option>
+                                <option value="Full-Time">{{ _trans('common.Full-Time') }}</option>
+                                <option value="Part-Time">{{ _trans('common.Part-Time') }}</option>
+                                <option value="Contractual">{{ _trans('common.Contractual') }}</option>
+                                <option value="Freelance">{{ _trans('common.Freelance') }}</option>
+                                <option value="Internship">{{ _trans('common.Internship') }}</option>
+                            </select>
+
+                            @if ($errors->has('type_of_employment'))
+                                <span class="error text-danger">
+                                    {{ $errors->first('type_of_employment') }}
+                                </span>
+                            @endif
+
+                        </div>
+                        <div class="mb-3">
+                            <label for="date_of_employment"
+                                class="form-label">{{ _trans('common.Date of employment') }}<span
+                                    class="text-danger">*</span></label>
+                            <input type="date" class="form-control ot-form-control ot_input"
+                                name="date_of_employment">
+
+
+                            @if ($errors->has('date_of_employment'))
+                                <span class="error text-danger">
+                                    {{ $errors->first('date_of_employment') }}
+                                </span>
+                            @endif
+
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="employment_end_date"
+                                class="form-label">{{ _trans('common.Employment end date') }}</label>
+                            <input type="date" class="form-control ot-form-control ot_input"
+                                name="employment_end_date" id="employment_end_date">
+                        </div>
+
+                        <div id="employment_end_reason">
+
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">{{ _trans('common.Type of work') }}<span
+                                    class="text-danger">*</span></label>
+                            <select class="form-control ot-form-control ot_input select2 w-100" name="type_of_work"
+                                id="__type_of_work">
+                                <option value="">{{ _trans('common.Select') }}</option>
+                            </select>
+
+                            @if ($errors->has('type_of_work'))
+                                <span class="error text-danger">
+                                    {{ $errors->first('type_of_work') }}
+                                </span>
+                            @endif
+
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1"
+                                class="form-label">{{ _trans('common.Basic pay type') }}<span
+                                    class="text-danger">*</span></label>
+                            <select class="form-select" name="basic_pay_type">
+                                <option selected value="">{{ _trans('common.Select') }}</option>
+                                <option value="Hourly">{{ _trans('common.Hourly') }}</option>
+                                <option value="Weekly">{{ _trans('common.Weekly') }}</option>
+                                <option value="Semi-Monthly">{{ _trans('common.Semi-Monthly') }}</option>
+                                <option value="Monthly">{{ _trans('common.Monthly') }}</option>
+
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ _trans('common.Monthly salary') }}</label>
+                            <input type="number" name="monthly_salary" id="monthly_salary"
+                                placeholder="{{ _trans('common.Monthly salary') }}" autocomplete="off"
+                                class="form-control ot-form-control ot_input negative_value_prevent"
+                                value="{{ old('monthly_salary', 0) }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ _trans('common.Hourly wage') }}</label>
+                            <input type="number" name="hourly_wage" id="hourly_wage"
+                                placeholder="{{ _trans('common.Monthly salary') }}" autocomplete="off"
+                                class="form-control ot-form-control ot_input negative_value_prevent"
+                                value="{{ old('hourly_wage', 0) }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ _trans('common.Part time') }} % <span
+                                    class="text-danger">*</span> </label>
+                            <input type="number" name="part_time_percent"
+                                placeholder="{{ _trans('common.Part time') }}" autocomplete="off"
+                                class="form-control ot-form-control ot_input negative_value_prevent"
+                                value="{{ old('part_time_percent', 0) }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ _trans('common.Calculated salary') }} % <span
+                                    class="text-danger">*</span> </label>
+                            <input type="number" name="calculated_salary" id="calculated_salary"
+                                placeholder="{{ _trans('common.Calculated salary') }}" autocomplete="off"
+                                class="form-control ot-form-control ot_input" value="{{ old('calculated_salary', 0) }}"
+                                readonly>
+                            <div id="error_message" style="color: red;"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h6>{{ _trans('common.Absense') }}</h6>
+                        <div class="mb-3">
+                            <label for="absence_type" class="form-label">{{ _trans('common.Type') }}</label>
+                            <select name="absence_type" id="__absence_type"
+                                class="form-control ot-form-control ot_input select2 w-100">
+                                <option selected>{{ _trans('common.Select') }}</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="absence_start_date" class="form-label">{{ _trans('common.Start date') }}</label>
+                            <input type="date" name="absence_start_date"
+                                class="form-control ot-form-control ot_input">
+                        </div>
+                        <div class="mb-3">
+                            <label for="absense_end_date" class="form-label">{{ _trans('common.End date') }} <span
+                                    class="text-danger">*</span></label>
+                            <input type="date" name="absence_end_date" class="form-control ot-form-control ot_input">
+                        </div><br />
+                        <h6>{{ _trans('common.Recurring items on every pay slip') }}</h6>
+                        <hr>
+                        <div class="mb-3">
+                            <div class="appendRow">
+                                <div class="row pay-slip-row">
+                                    <div class="col-md-3">
+                                        <label for="pay_code" class="form-label">{{ _trans('common.Pay code') }}</label>
+                                        <select class="form-select" name="pay_code[]">
+                                            <option selected value="">{{ _trans('common.Select') }}</option>
+                                            @foreach ($data['payCodes'] as $code)
+                                                <option value="{{ $code['id'] }}">{{ $code['title'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="pay_code" class="form-label">{{ _trans('common.Qty') }}</label>
+                                        <input type="number" name="qty[]"
+                                            class="form-control ot-form-control ot_input negative_value_prevent pay-slip-qty"
+                                            onkeyup="calculatePaySlipAmount(this)">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="unit_price"
+                                            class="form-label">{{ _trans('common.Unit price') }}</label>
+                                        <input type="number" name="unit_price[]" id=""
+                                            class="form-control ot-form-control ot_input negative_value_prevent pay-slip-unit-price"
+                                            onkeyup="calculatePaySlipAmount(this)">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="amount" class="form-label">{{ _trans('common.Amount') }}</label>
+                                        <input type="number" name="amount[]" id=""
+                                            class="form-control ot-form-control ot_input pay-slip-amount" readonly>
+                                    </div>
+                                    <div class="col-md-2 mt-2">
+                                        <button id="addRowButton" class="btn btn-light btn-outline text-bold">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="appendNewTextArea">
+
+                            </div>
+                            <button type="button" id="addNewTextArea" class="btn-light btn-outline btn text-bold mt-3">+
+                                {{ _trans('common.Add new text row') }}</button>
+                        </div> <br /><br />
+
+                        <h6>{{ _trans('common.Tax information') }}</h6>
+                        <hr>
+                        <div class="mb-3">
+                            <label class="form-label">{{ _trans('common.Tax table') }}</label>
+                            <input type="text" name="tax_table" placeholder="{{ _trans('common.Tax table') }}"
+                                autocomplete="off" class="form-control ot-form-control ot_input"
+                                value="{{ old('tax_table') }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ _trans('common.Tax') }} % <span class="text-danger">*</span>
+                            </label>
+                            <input type="number" name="tax_percent" placeholder="{{ _trans('common.Tax percent') }}"
+                                class="form-control ot-form-control ot_input negative_value_prevent"
+                                value="{{ old('tax_percent') }}">
+
+                            @if ($errors->has('tax_percent'))
+                                <div class="error text-danger">{{ $errors->first('tax_percent') }}</div>
+                            @endif
+
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="uses_free_card" id="usesFreeCard">
+                            <label class="form-check-label"
+                                for="usesFreeCard">{{ _trans('common.Uses Free Card') }}</label>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="type_of_company_car"
+                                class="form-label">{{ _trans('common.Company car type') }}</label>
+                            <select class="form-select" name="type_of_company_car"
+                                onchange="showDivBasedOnVehicleType(this)">
+                                <option selected value="">{{ _trans('common.Select') }}</option>
+                                <option value="Standard car">{{ _trans('common.Standard car') }}
+                                </option>
+                                <option value="Van KM">{{ _trans('common.Van KM') }}</option>
+                                <option value="Van List Price">{{ _trans('common.Van List Price') }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <div class="row" id="vehicleRow">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4-lg-12">
+                    <div class="d-flex justify-content-end mt-4">
+                        <div class="form-group mb-3">
+                            @if (hasPermission('user_create'))
+                                <button type="submit" class="crm_theme_btn mr-3">{{ _trans('common.Submit') }}</button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+@endsection
+@section('script')
+    <script src="{{ url('backend/js/pages/__profile.js') }}"></script>
+    <script>
+        $("#addRowButton").click(function() {
+            event.preventDefault();
+            // Create a new row with three col-md-3 columns and input fields
+            const newRow = `
+                    <div class="row addedInputs mt-3 pay-slip-row">
+                        <div class="col-md-3">
+                            <select class="form-select" name="pay_code[]">
+                                <option selected value="">{{ _trans('common.Select') }}</option>
+                                @foreach ($data['payCodes'] as $code)
+                                    <option value="{{ $code['id'] }}">{{ $code['title'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            
+                            <input type="number" name="qty[]"
+                                class="form-control ot-form-control ot_input negative_value_prevent pay-slip-qty" onkeyup="calculatePaySlipAmount(this)">
+                        </div>
+                        <div class="col-md-2">
+                            
+                            <input type="number" name="unit_price[]" id=""
+                                class="form-control ot-form-control ot_input negative_value_prevent pay-slip-unit-price" onkeyup="calculatePaySlipAmount(this)">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="number" name="amount[]" class="form-control ot-form-control ot_input pay-slip-amount" min="0" readonly>
+                        </div>
+                        <div class="col-md-2 mt-2">
+                            <button class="btn btn-danger btn-block removeRow" onclick="removePayCode(this)">-</button>
+                        </div>
+                    </div>
+                    
+                `;
+            $(".appendRow").append(newRow);
+        });
+    </script>
+    <script>
+        const removePayCode = (obj) => {
+            $(obj).closest('.addedInputs').remove();
+        }
+    </script>
+    <script>
+        // jQuery function to prevent negative input values as the user types
+        $(document).on('input', '.negative_value_prevent', function() {
+            var input = $(this);
+            var inputValue = parseFloat(input.val());
+            if (isNaN(inputValue) || inputValue < 0) {
+                // Clear the input value if it's negative or not a number
+                input.val('');
+            }
+        });
+    </script>
+    <script>
+        $('#addNewTextArea').on('click', function() {
+            // Show html
+            var newTextArea = $('<div class="row">' +
+                '<div class="col-md-10">' +
+                '<textarea class="form-control" rows="3" name="employee_pay_slip_note"></textarea>' +
+                '</div>' +
+                '<div class="col-md-2">' +
+                '<button class="btn btn-danger btn-block button addedTextAreaRemove">-</button>' +
+                '</div>' +
+                '</div>');
+            // Append the cloned structure to the "appendNewTextArea" div
+            $(".appendNewTextArea").append(newTextArea);
+            // Hide the "addNewTextArea" div
+            $("#addNewTextArea").hide();
+        });
+        // Use event delegation to handle the "Remove" button click
+        $(".appendNewTextArea").on("click", ".addedTextAreaRemove", function() {
+            // Remove the parent "row" div when the "Remove" button is clicked
+            $(this).closest(".row").remove();
+            $("#addNewTextArea").show();
+        });
+    </script>
+    <script>
+        // Store the HTML in a JavaScript variable
+        var employmentEndReasonHTML = `
+            <div class="mb-3">
+                <label for="employment_end_reason" class="form-label">{{ _trans('common.Employment end reason') }}</label>
+                <select class="form-select" name="employment_end_reason">
+                    <option selected value="">{{ _trans('common.Select') }}</option>
+                    <option value="The employment should never been reported">The employment should never been reported</option>
+                    <option value="The employee has terminated the employment">The employee has terminated the employment</option>
+                    <option value="The employee has resigned from their position">The employee has resigned from their position</option>
+                    <option value="Changed payroll system or accountant">Changed payroll system or accountant</option>
+                    <option value="Changes the organizational structure or changed to other internal position">Changes the organizational structure or changed to other internal position</option>
+                    <option value="The contract, temporary appooinment or temporary position has been terminated">The contract, temporary appooinment or temporary position has been terminated</option>
+
+                </select>
+            </div>
+        `;
+        // Function to display the HTML in the #employment_end_reason div
+        function showEmploymentEndReason() {
+            $('#employment_end_reason').html(employmentEndReasonHTML);
+        }
+        // Event listener to trigger the display when a date is selected
+        $('#employment_end_date').on('change', function() {
+            showEmploymentEndReason();
+        });
+    </script>
+
+
+
+    <script>
+        // Calculate salary
+        function calculateSalary() {
+            let monthlySalary = Number($('#monthly_salary').val());
+            let calculatedSalary = monthlySalary;
+            $('#calculated_salary').val(calculatedSalary.toFixed(2));
+        }
+        $(document).on('keyup', '#monthly_salary', function() {
+            calculateSalary();
+            $('#hourly_wage').val('0.00');
+        });
+        $(document).on('keyup', '#hourly_wage', function() {
+            $('#calculated_salary').val('0.00');
+            $('#monthly_salary').val('0.00');
+        });
+    </script>
+    <script>
+        function calculatePaySlipAmount(obj) {
+            let qty = Number($(obj).closest('.pay-slip-row').find('.pay-slip-qty').val());
+            let unitPrice = Number($(obj).closest('.pay-slip-row').find('.pay-slip-unit-price').val());
+            let amount = qty * unitPrice;
+
+            $(obj).closest('.pay-slip-row').find('.pay-slip-amount').val(amount.toFixed(2));
+        }
+
+        $("#__absence_type").select2({
+            ajax: {
+                url: '/dashboard/user/leave/types',
+                dataType: "json",
+                type: "get",
+                delay: 250,
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                text: item.name,
+                                id: item.id,
+                            };
+                        }),
+                    };
+                },
+                cache: false,
+            },
+        });
+
+        $("#__type_of_contract").select2({
+            ajax: {
+                url: '/dashboard/user/contract/types',
+                dataType: "json",
+                type: "get",
+                delay: 200,
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                text: item.name,
+                                id: item.id,
+                            };
+                        }),
+                    };
+                },
+                cache: false,
+            },
+        });
+        $("#__type_of_work").select2({
+            ajax: {
+                url: '/dashboard/user/work/type/ajax',
+                dataType: "json",
+                type: "get",
+                delay: 200,
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            console.log(item.work_code);
+                            return {
+                                text: item.work_code + " - " + item.description,
+                                id: item.id,
+                            };
+                        }),
+                    };
+                },
+                cache: false,
+            },
+        });
+    </script>
+
+    <script>
+        const showDivBasedOnVehicleType = (obj) => {
+            let vehicleType = $(obj).find('option:selected').val();
+            // alert('working');
+            if (vehicleType == 'Standard car') {
+                var StandardCarHTML = `
+                    <div id="StandardCarHTML">
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.Registration no') }}<span class="text-danger">*</span> </label>
+                            <input type="text" placeholder="{{ _trans('common.Registration no') }}" name="reg_no" class="form-control ot-form-control ot_input">
+                        </div>
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.Registration year') }}</label>
+                            <input type="text" name="reg_year" class="form-control ot-form-control ot_input" placeholder="{{ _trans('common.Registration year') }}">
+                        </div>
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.Price') }} <span class="text-danger">*</span> </label>
+                            <input type="text" name="price" class="form-control ot-form-control ot_input" placeholder="{{ _trans('common.Price') }}">
+                        </div>
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.Brand') }}</label>
+                            <input type="text" name="barnd" class="form-control ot-form-control ot_input" placeholder="{{ _trans('common.Brand') }}">
+                        </div>
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.Start Date') }}</label>
+                            <input type="text" name="start_date" class="form-control ot-form-control ot_input" placeholder="{{ _trans('common.Start Date') }}">
+                        </div>
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.End Date') }}</label> ******
+                            <input type="text" name="end_date" class="form-control ot-form-control ot_input" placeholder="{{ _trans('common.End Date') }}">
+                        </div>
+                    </div>
+                `;
+                $("#vehicleRow").append(StandardCarHTML);
+                $("#vehicleKmHtml").remove();
+                $("#vanListPriceHtml").remove();
+
+            } else if (vehicleType == 'Van KM') {
+                var vehicleKmHtml = `
+                    <div id="vehicleKmHtml">
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.Registration no') }} +++ <span class="text-danger">*</span> </label>
+                            <input type="text" placeholder="{{ _trans('common.Registration no') }}" name="reg_no" class="form-control ot-form-control ot_input">
+                        </div>
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.Registration year') }}</label>
+                            <input type="text" name="reg_year" class="form-control ot-form-control ot_input" placeholder="{{ _trans('common.Registration year') }}">
+                        </div>
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.Price') }} <span class="text-danger">*</span> </label>
+                            <input type="text" name="price" class="form-control ot-form-control ot_input" placeholder="{{ _trans('common.Price') }}">
+                        </div>
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.Brand') }}</label>
+                            <input type="text" name="barnd" class="form-control ot-form-control ot_input" placeholder="{{ _trans('common.Brand') }}">
+                        </div>
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.Start Date') }}</label>
+                            <input type="text" name="start_date" class="form-control ot-form-control ot_input" placeholder="{{ _trans('common.Start Date') }}">
+                        </div>
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.End Date') }}</label> ++++++
+                            <input type="text" name="end_date" class="form-control ot-form-control ot_input" placeholder="{{ _trans('common.End Date') }}">
+                        </div>
+                    </div>
+                `;
+                $("#vehicleRow").append(vehicleKmHtml);
+                $("#vanListPriceHtml").remove();
+                $("#StandardCarHTML").remove();
+
+            } else if (vehicleType == 'Van List Price') {
+                var vanListPriceHtml = `
+                    <div id="vanListPriceHtml">
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.Registration no') }}<span class="text-danger">*</span> </label>
+                            <input type="text" placeholder="{{ _trans('common.Registration no') }}" name="reg_no" class="form-control ot-form-control ot_input">
+                        </div>
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.Registration year') }}</label>
+                            <input type="text" name="reg_year" class="form-control ot-form-control ot_input" placeholder="{{ _trans('common.Registration year') }}">
+                        </div>
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.Price') }} <span class="text-danger">*</span> </label>
+                            <input type="text" name="price" class="form-control ot-form-control ot_input" placeholder="{{ _trans('common.Price') }}">
+                        </div>
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.Brand') }}</label>
+                            <input type="text" name="barnd" class="form-control ot-form-control ot_input" placeholder="{{ _trans('common.Brand') }}">
+                        </div>
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.Start Date') }}</label>
+                            <input type="text" name="start_date" class="form-control ot-form-control ot_input" placeholder="{{ _trans('common.Start Date') }}">
+                        </div>
+                        <div class="col-md-12 m-1">
+                            <label class="form-label">{{ _trans('common.End Date') }}</label>
+                            <input type="text" name="end_date" class="form-control ot-form-control ot_input" placeholder="{{ _trans('common.End Date') }}">
+                        </div>
+                    </div>
+                `;
+                $("#vehicleRow").append(vanListPriceHtml);
+                $("#vehicleKmHtml").remove();
+                $("#StandardCarHTML").remove();
+            }
+        }
+    </script>
+@endsection
