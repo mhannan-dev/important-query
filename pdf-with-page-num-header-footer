@@ -16,7 +16,7 @@ Route::get('/demo-pdf', function () {
 });
 
 
-demo_pdf.blade.php
+demo_pdf.blade.php and package  "barryvdh/laravel-dompdf": "^2.0",
 
 <!DOCTYPE html>
 <html>
