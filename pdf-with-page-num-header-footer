@@ -12,6 +12,11 @@ Route::get('/demo-pdf', function () {
     $pdf = PDF::loadView('demo_pdf', $data);
     $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isPhpEnabled' => true]);
     $pdf->setPaper('A4', 'portrait');
+    
+        // $pdf->output();
+        // $domPdf = $pdf->getDomPDF();
+        // $canvas = $domPdf->get_canvas();
+        // $canvas->page_text(10, 10, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
     return $pdf->stream('generated_pdf.pdf');
 });
 
